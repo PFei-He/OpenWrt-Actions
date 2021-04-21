@@ -35,7 +35,7 @@ jobs:
           cat /proc/cpuinfo | grep 'model name'
           free -h
 
-      - name: Set env
+      - name: 设置环境变量
         run: |
           echo "SSH_ACTIONS=false" >> $GITHUB_ENV
           echo "UPLOAD_BIN_DIR=false" >> $GITHUB_ENV
@@ -44,18 +44,18 @@ jobs:
           echo "TZ=Asia/Shanghai" >>$GITHUB_ENV
           echo "Build_Date=$(date +%Y.%m.%d)" >> $GITHUB_ENV
           
-      - name: Show env
+      - name: 显示环境变量
         run: echo $GITHUB_ENV
 
-      - name: free disk space
-        run: |
-          df -h
-          sudo swapoff -a
-          sudo rm -f /swapfile
-          sudo apt clean
-          docker rmi $(docker image ls -aq)
-          df -h
-          /bin/bash ./script/free_disk_space.sh
+      #- name: 释放硬盘空间
+        #run: |
+          #df -h
+          #sudo swapoff -a
+          #sudo rm -f /swapfile
+          #sudo apt clean
+          #docker rmi $(docker image ls -aq)
+          #df -h
+          #/bin/bash ./script/free_disk_space.sh
 
       - name: 构建编译环境
         env:
@@ -72,12 +72,14 @@ jobs:
       - name: 下载 OpenWrt 源码
         run: |
           git clone -b openwrt-21.02 --single-branch https://git.openwrt.org/openwrt/openwrt.git openwrt
-      - name: Prepare openwrt
+      
+      - name: 预置 OpenWrt 系统
         run: |
           cd openwrt
           cp -r ../step/* ./
           /bin/bash 00-prepare_openwrt.sh
-      - name: Prepare application packages
+
+      - name: 预置 OpenWrt 应用列表
         run: |
           cd openwrt
           /bin/bash 01-prepare_package.sh
@@ -90,14 +92,22 @@ jobs:
         run: |
           cd openwrt
           /bin/bash 03-create_acl_for_luci.sh -a
-      - name: Load Multiple devices Config
+
+      - name: 加载 OpenWrt 应用配置文件
         run: |
           cd openwrt
           mv ../seed/rockchip.seed .config
           make defconfig
-          cp .config  rockchip_multi.config
+          cp .config rockchip_multi.config
+
+      - name: SSH connection to Actions
+        uses: P3TERX/ssh2actions@v1.0.0
+        if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+        env:
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           
-      - name: Download package
+      - name: 下载 OpenWrt 应用
         id: package
         run: |
           cd openwrt
@@ -106,45 +116,34 @@ jobs:
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
 
-      - name: Make toolchain-aarch64
+      - name: 编译 aarch64 工具链
         id: compiletoolchain
         continue-on-error: true
         run: |
           cd openwrt
           let make_process=$(nproc)+1
           make toolchain/install -j${make_process} V=s
-      - name: If toolchain Error
+
+      - name: 失败重试
         if: steps.compiletoolchain.outcome == 'failure'
         run: |
-          echo '================================================================'
           cd openwrt && make toolchain/install -j1 V=s
-      - name: Compile OpenWRT for R2S & R4S & R1-plus
+
+      - name: 编译 R2S & R4S & R1-Plus 固件
         id: compileopenwrt
         continue-on-error: true
         run: |
           cd openwrt
           let make_process=$(nproc)+1
           make -j${make_process} V=s || make -j${make_process} V=s
-      - name: If compile openwrt Error
+
+      - name: 失败重试
         if: steps.compileopenwrt.outcome == 'failure'
         run: |
           cat openwrt/.config
-          echo '================================================================'
           cd openwrt && make -j1 V=s
-#      - name: Load R4S Config
-#        run: |
-#          cd openwrt
-#          mv ../seed/r4s.seed .config
-#          make defconfig
-#          cp .config  r4s.config
 #
-#      - name: Compile OpenWRT for R4S
-#        run: |
-#          cd openwrt
-#          let make_process=$(nproc)+1
-#          make -j${make_process} V=s || make -j${make_process} V=s
-#
-      - name: Organize files
+      - name: 生成固件
         id: organize
         run: |
           rm -rf ./artifact/
@@ -166,14 +165,15 @@ jobs:
           zip R1-plus-QC-$(date +%Y-%m-%d)-21.02-sfs.zip *r1-plus*squashfs*   
           cp ../openwrt/*.config ./
           ls -Ahl
-      - name: Upload artifact
+
+      - name: 上传
         uses: actions/upload-artifact@main
         if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
         with:
           name: OpenWRT_21.02
           path: ./artifact/
 
-      - name: Create release
+      - name: 发布固件
         id: create_release
         uses: ncipollo/release-action@v1.8.0
         if: env.UPLOAD_RELEASE == 'true' && !cancelled()
