@@ -1,4 +1,4 @@
-From e67bd1a1db94d487fa3747d57aea17b83ff39a27 Mon Sep 17 00:00:00 2001
+From a8fac974de47defc5ef3b36605186c6b81b22eac Mon Sep 17 00:00:00 2001
 From: AmadeusGhost <42570690+AmadeusGhost@users.noreply.github.com>
 Date: Sun, 28 Mar 2021 21:00:18 +0800
 Subject: [PATCH] rockchip: add support for OrangePi R1 Plus
@@ -510,10 +510,10 @@ index 0000000000..847b121a34
 +	fdt32_t		rockchip_grf;
 +};
 diff --git a/target/linux/rockchip/armv8/base-files/etc/board.d/01_leds b/target/linux/rockchip/armv8/base-files/etc/board.d/01_leds
-index bfecd0874c..fd42fb2302 100644
+index 77655d426a..d1d35a71ad 100755
 --- a/target/linux/rockchip/armv8/base-files/etc/board.d/01_leds
 +++ b/target/linux/rockchip/armv8/base-files/etc/board.d/01_leds
-@@ -9,7 +9,8 @@ board_config_update
+@@ -10,7 +10,8 @@ board_config_update
  
  case $board in
  friendlyarm,nanopi-r2s|\
@@ -524,10 +524,10 @@ index bfecd0874c..fd42fb2302 100644
  	ucidef_set_led_netdev "lan" "LAN" "$boardname:green:lan" "eth1"
  	;;
 diff --git a/target/linux/rockchip/armv8/base-files/etc/board.d/02_network b/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
-index 0c22601c95..d663ab49f0 100644
+index 4849b877e1..2668c0e098 100755
 --- a/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
 +++ b/target/linux/rockchip/armv8/base-files/etc/board.d/02_network
-@@ -8,7 +8,8 @@ rockchip_setup_interfaces()
+@@ -9,7 +9,8 @@ rockchip_setup_interfaces()
  
  	case "$board" in
  	friendlyarm,nanopi-r2s|\
@@ -537,7 +537,7 @@ index 0c22601c95..d663ab49f0 100644
  		ucidef_set_interfaces_lan_wan 'eth1' 'eth0'
  		;;
  	*)
-@@ -40,6 +41,10 @@ rockchip_setup_macs()
+@@ -41,6 +42,10 @@ rockchip_setup_macs()
  		wan_mac=$(cat /sys/class/net/eth0/address)
  		lan_mac=$(macaddr_add "$wan_mac" +1)
  		;;
@@ -563,7 +563,7 @@ index 9e4a4cf4fc..d8e513f560 100644
  	set_interface_core 4 "eth1" "xhci-hcd:usb3"
  	;;
 diff --git a/target/linux/rockchip/image/armv8.mk b/target/linux/rockchip/image/armv8.mk
-index b3ef5a28d4..8d00cc46db 100644
+index 99229d35b9..4e887ef646 100644
 --- a/target/linux/rockchip/image/armv8.mk
 +++ b/target/linux/rockchip/image/armv8.mk
 @@ -40,3 +40,13 @@ define Device/radxa_rock-pi-4

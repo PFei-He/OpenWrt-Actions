@@ -1,4 +1,4 @@
-## OpenWrt for Rockchip rk3328/rk3399, include Nanopi R2S/R4S and OrangePi R1 plus 
+## OpenWrt for Rockchip rk3328/rk3399, include Nanopi R2S/R4S and OrangePi R1 plus
 #### ⚠ WARNING: USE IT UNDER YOUR OWN RISK. Non profit use only ⚠ 
 [![OpenWRT-snapshot](https://github.com/quintus-lab/OpenWRT-Rockchip/actions/workflows/openwrt-rockchip.yml/badge.svg?branch=master)](https://github.com/quintus-lab/OpenWRT-Rockchip/actions/workflows/openwrt-rockchip.yml)
 [![OpenWRT-21.02](https://github.com/quintus-lab/OpenWRT-Rockchip/actions/workflows/openwrt-rockchip-2102.yml/badge.svg?branch=21.02)](https://github.com/quintus-lab/OpenWRT-Rockchip/actions/workflows/openwrt-rockchip-2102.yml)
@@ -7,7 +7,7 @@
 - - -
 ## Introduction
 - ### Usage
-0. OpenWRT Official master source code + CTCGFW & Lean's packages code <br/>
+0. OpenWRT 21.02 source  + CTCGFW & Lean's packages<br/>
 1. Default Management IP addr is [192.168.1.1](192.168.1.1), username: `root`  , no password<br/>
  Please setup the login password **as soon as possible** once you logined.
 2. Once you flashed the firmware into SD card, you may simply use "Upgrade" function<br/>

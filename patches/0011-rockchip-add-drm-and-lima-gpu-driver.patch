@@ -17,7 +17,7 @@ Signed-off-by: Tianling Shen <cnsztl@immortalwrt.org>
  create mode 100644 target/linux/rockchip/modules.mk
 
 diff --git a/package/kernel/linux/modules/video.mk b/package/kernel/linux/modules/video.mk
-index c71f0760a6..14d1afcb85 100644
+index c71f0760a66..14d1afcb85c 100644
 --- a/package/kernel/linux/modules/video.mk
 +++ b/package/kernel/linux/modules/video.mk
 @@ -221,6 +221,24 @@ endef
@@ -47,7 +47,7 @@ index c71f0760a6..14d1afcb85 100644
    TITLE:=Direct Rendering Manager (DRM) support
 diff --git a/target/linux/rockchip/modules.mk b/target/linux/rockchip/modules.mk
 new file mode 100644
-index 0000000000..9349507f2f
+index 00000000000..9349507f2fe
 --- /dev/null
 +++ b/target/linux/rockchip/modules.mk
 @@ -0,0 +1,61 @@
