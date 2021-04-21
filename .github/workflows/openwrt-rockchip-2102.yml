@@ -15,10 +15,6 @@ on:
       - 'step/00-prepare_openwrt.sh'
       - 'step/01-prepare_package.sh'
       - 'seed/rockchip.seed'
-  schedule:
-    - cron: 30 21 * * *
-  watch:
-    types: started
 
 jobs:
     build:
