@@ -69,36 +69,37 @@ jobs:
           git config --global user.name 'GitHub Actions' && git config --global user.email 'noreply@github.com'
           df -h
 
-      - name: 下载 OpenWrt 源码
+      - name: 下载源码
         run: |
           git clone -b openwrt-21.02 --single-branch https://git.openwrt.org/openwrt/openwrt.git openwrt
       
-      - name: 预置 OpenWrt 系统
+      - name: 预置系统 & 添加设备信息
         run: |
           cd openwrt
           cp -r ../step/* ./
           /bin/bash 00-prepare_openwrt.sh
 
-      - name: 预置 OpenWrt 应用列表
+      - name: 预置应用列表
         run: |
           cd openwrt
           /bin/bash 01-prepare_package.sh
-#      - name: Remove Upx
+
+#     - name: 移除 Upx (通用可执行文件压缩器)
 #        run: |
 #          cd openwrt
 #          /bin/bash 02-remove_upx.sh
 
-      - name: Add ACL
+      - name: 添加 ACL
         run: |
           cd openwrt
           /bin/bash 03-create_acl_for_luci.sh -a
 
-      - name: 加载 OpenWrt 应用配置文件
-        run: |
-          cd openwrt
-          mv ../seed/rockchip.seed .config
-          make defconfig
-          cp .config rockchip_multi.config
+      #- name: 加载应用配置文件
+        #run: |
+          #cd openwrt
+          #mv ../seed/rockchip.seed .config
+          #make defconfig
+          #cp .config rockchip_multi.config
 
       - name: SSH connection to Actions
         uses: P3TERX/ssh2actions@v1.0.0
