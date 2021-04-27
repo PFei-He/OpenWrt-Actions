@@ -19,6 +19,7 @@ svn co https://github.com/openwrt/openwrt/branches/openwrt-19.07/package/network
 git clone https://github.com/fw876/helloworld package/helloworld
 git clone https://github.com/coolsnowwolf/lede/tree/master/package/lean package/lean
 git clone https://github.com/xiaorouji/openwrt-passwall package/xiaorouji/openwrt-passwall
+git clone -b master https://github.com/vernesong/OpenClash.git package/luci-app-openclash
 
 #生成默认配置及缓存
 rm -rf .config
